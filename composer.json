@@ -1,0 +1,38 @@
+{
+    "name": "jsantoso/laravel-services",
+    "type": "library",
+    "description": "Reusable logic for Laravel apps",
+    "license": "MIT",
+    "keywords": ["helper", "validation"],
+    "authors": [
+        {
+            "name": "Jeffrey Santoso"
+        }
+    ],
+    "require": {
+        "php": "^7.3 || ^8.0",
+        "aws/aws-sdk-php": "^3.173",
+        "justinrainbow/json-schema": "^5.2",
+        "monolog/monolog": "^2.2",
+        "ramsey/uuid": "^4.1"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.13",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jsantoso\\LaravelServices\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Jsantoso\\LaravelServices\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "prefer-stable": true
+    
+}
