@@ -1,6 +1,12 @@
 <?php
 namespace Jsantoso\LaravelServices;
 
+use Ramsey\Uuid\Uuid;
+use JsonSchema\Validator;
+use JsonSchema\SchemaStorage;
+use JsonSchema\Constraints\Factory;
+use Psr\Log\LoggerInterface;
+
 class ValidationService {
     
     const MAX_INT32 = 2147483647;
@@ -147,6 +153,46 @@ class ValidationService {
             return false;
         }
         return true;
+    }
+    
+    public static function isValidDate($value) {
+        if (!$value) {
+            return false;
+        } else {
+            $date = date_parse($value);
+            if ($date['error_count'] == 0 && $date['warning_count'] == 0) {
+                return checkdate($date['month'], $date['day'], $date['year']);
+            } else {
+                return false;
+            }
+        }
+    }
+    
+    public static function isValidUUID($value) {
+        return Uuid::isValid($value);
+    }
+    
+    public static function validateAgainstJSONSchema(object $jsonSchemaObject, $json, ?LoggerInterface $logger) {
+        
+        $schemaStorage = new SchemaStorage();
+        $schemaStorage->addSchema('file://mySchema', $jsonSchemaObject);
+        
+        $validator = new Validator( new Factory($schemaStorage));
+        $validator->validate($json, $jsonSchemaObject);
+        
+        if (!$validator->isValid()) {
+            foreach ($validator->getErrors() as $error) {
+                
+                if ($logger) {
+                    try {
+                        $logger->warning("Error from validator: " . json_encode($error));
+                    } catch (Exception $ex) {}
+                }
+                
+            }
+        }
+        
+        return $validator->isValid();
     }
     
 }

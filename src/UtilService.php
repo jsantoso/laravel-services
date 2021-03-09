@@ -3,10 +3,6 @@ namespace Jsantoso\LaravelServices;
 
 use Jsantoso\LaravelServices\ValidationService;
 
-use JsonSchema\Validator;
-use JsonSchema\SchemaStorage;
-use JsonSchema\Constraints\Factory;
-
 use Ramsey\Uuid\Uuid;
 use Exception;
 
@@ -65,29 +61,6 @@ class UtilService {
     public static function generateUUID() {
         $uuid = Uuid::uuid4();
         return $uuid->toString();
-    }
-    
-    public static function validateAgainstJSONSchema(object $jsonSchemaObject, $json, ?LoggerInterface $logger) {
-        
-        $schemaStorage = new SchemaStorage();
-        $schemaStorage->addSchema('file://mySchema', $jsonSchemaObject);
-        
-        $validator = new Validator( new Factory($schemaStorage));
-        $validator->validate($json, $jsonSchemaObject);
-        
-        if (!$validator->isValid()) {
-            foreach ($validator->getErrors() as $error) {
-                
-                if ($logger) {
-                    try {
-                        $logger->warning("Error from validator: " . json_encode($error));
-                    } catch (Exception $ex) {}
-                }
-                
-            }
-        }
-        
-        return $validator->isValid();
     }
     
     public static function tempnam($dir, $prefix) {
@@ -158,9 +131,5 @@ class UtilService {
         
         return $output;
     }
-    
-    public static function isValidUUID($value) {
-        return Uuid::isValid($value);
-    }
-    
+        
 }
