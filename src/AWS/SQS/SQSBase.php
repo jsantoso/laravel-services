@@ -90,8 +90,8 @@ class SQSBase {
                     'region'    => $this->awsRegion ? $this->awsRegion : self::DEFAULT_AWS_REGION,
                     'version'   => $this->awsVersion ? $this->awsVersion : self::DEFAULT_AWS_VERSION,
                     'credentials'   => [
-                        'key'       => $this->awsCredentialKey(),
-                        'secret'    => $this->awsCredentialSecret()
+                        'key'       => $this->awsCredentialKey,
+                        'secret'    => $this->awsCredentialSecret
                     ]
                 ];
                 
