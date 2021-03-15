@@ -34,27 +34,27 @@ class SQSBase {
         return $this;
     }
     
-    protected function setAWSCredentialKey($key) {
+    public function setAWSCredentialKey($key) {
         $this->awsCredentialKey = $key;
         return $this;
     }
     
-    protected function setAWSCredentialSecret($secret) {
+    public function setAWSCredentialSecret($secret) {
         $this->awsCredentialSecret = $secret;
         return $this;
     }
     
-    protected function setAWSRegion($region) {
+    public function setAWSRegion($region) {
         $this->awsRegion = $region;
         return $this;
     }
     
-    protected function setAWSVersion($version) {
+    public function setAWSVersion($version) {
         $this->awsVersion = $version;
         return $this;
     }
     
-    protected function setSQSEndpoint($sqsEndpoint) {
+    public function setSQSEndpoint($sqsEndpoint) {
         $this->sqsEndpoint = $sqsEndpoint;
         return $this;
     }
