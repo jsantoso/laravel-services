@@ -5,7 +5,15 @@ namespace Jsantoso\LaravelServices\AWS\SQS;
 use Jsantoso\LaravelServices\AWS\SQS\SQSReceiveService;
 use Illuminate\Support\Facades\Log;
 
+use Exception;
+
 class QueueListenerService {
+    
+    public function __construct(SQSReceiveService $consumerService = null) {
+        if ($consumerService) {
+            $this->consumerService = $consumerService;
+        }
+    }
     
     private $attributeNames = ['SentTimestamp'];
     private $messageAttributeNames = ['All'];
@@ -37,7 +45,7 @@ class QueueListenerService {
     public function run($queueName, Callable $function) {       
         
         if (!$this->consumerService) {
-            $this->consumerService = new SQSReceiveService();
+            throw new Exception("consumer service is not set. You can set it from constructor");
         }
         
         $this->consumerService->setMaxNumberOfMessages($this->maxNumberOfMessages)
