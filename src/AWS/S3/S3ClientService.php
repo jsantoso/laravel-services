@@ -5,7 +5,7 @@ namespace Jsantoso\LaravelServices\AWS\S3;
 use Aws\S3\S3Client;
 use Psr\Log\LoggerInterface;
 
-use App\Services\Platform\AWSConfigService;
+use Jsantoso\LaravelServices\AWS\AWSConfigService;
 
 class S3ClientService {
     
