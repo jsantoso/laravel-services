@@ -21,7 +21,7 @@ class SelfTestController extends Controller {
                 $actions = [];
                 foreach ($pluginObj->getTestActions() as $testAction) {
                     
-                    $action = new stdClass();
+                    $action = new \stdClass();
                     $action->id = $testAction->getId();
                     $action->label = $testAction->getActionLabel();
                     $action->plugin = $pluginClass;
@@ -31,7 +31,7 @@ class SelfTestController extends Controller {
                     
                 }
                 
-                $test = new stdClass();
+                $test = new \stdClass();
                 $test->name = $pluginObj->getTestName();
                 $test->actions = $actions;
                 

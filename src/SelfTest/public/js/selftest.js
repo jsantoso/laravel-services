@@ -43,13 +43,13 @@ $(document).ready(function(){
             SelfTest.ajax.get(SelfTest.dataUrl + '?plugin=' + actionElem.plugin + '&name=' + actionElem.name).then(
                 function(data){
                     if (data.success) {
-                        $row.find("td.result-cell").html('<span class="glyphicon glyphicon-ok" style="color:green"></span>');
+                        $row.find("td.result-cell").html('<span class="bi bi-check-lg" style="color:green"></span>');
                     } else {
-                        $row.find("td.result-cell").html('<span class="glyphicon glyphicon-remove" style="color:red"></span>');
+                        $row.find("td.result-cell").html('<span class="bi bi-x-lg" style="color:red"></span>');
                     }
                 },
                 function() {
-                    $row.find("td.result-cell").html('<span class="glyphicon glyphicon-remove" style="color:red"></span>');
+                    $row.find("td.result-cell").html('<span class="bi bi-x-lg" style="color:red"></span>');
                 }
             );
         });
