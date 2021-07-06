@@ -13,6 +13,6 @@ return [
         \Jsantoso\LaravelServices\SelfTest\Plugins\TempFileTest::class,
         \Jsantoso\LaravelServices\SelfTest\Plugins\EmailTest::class,
 
-        //Add any custom plugins below
+        //Add any custom plugins below 
     ]
 ];
