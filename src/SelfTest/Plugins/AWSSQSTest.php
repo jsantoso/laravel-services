@@ -10,7 +10,7 @@ use Exception;
 
 class AWSSQSTest implements SelfTestPluginInterface {
     
-    const QUEUE_NAME = 'self_test_test_queue';
+    const QUEUE_NAME = 'self_test_queue';
     
     
     public function getTestName(): string {
