@@ -31,13 +31,13 @@ class AWSSQSTest implements SelfTestPluginInterface {
             try {
                 $data = $this->generateRandomData();
 
-                $sender = new SQSSendService();
+                $sender = app()->make(SQSSendService::class);
                 $sender->createQueue(self::QUEUE_NAME);
                 $sender->send(self::QUEUE_NAME, $data);
 
                 sleep(2);
                 
-                $receiver = new SQSReceiveService();
+                $receiver = app()->make(SQSReceiveService::class);
                 $receiver->setWaitTimeSeconds(3)
                          ->setMaxNumberOfMessages(10);
                 
