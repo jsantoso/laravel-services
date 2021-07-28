@@ -11,6 +11,7 @@ return [
         \Jsantoso\LaravelServices\SelfTest\Plugins\RedisTest::class,
         \Jsantoso\LaravelServices\SelfTest\Plugins\AWSSQSTest::class,
         \Jsantoso\LaravelServices\SelfTest\Plugins\TempFileTest::class,
+        \Jsantoso\LaravelServices\SelfTest\Plugins\LaravelQueueTest::class,
         \Jsantoso\LaravelServices\SelfTest\Plugins\EmailTest::class,
 
         //Add any custom plugins below 
