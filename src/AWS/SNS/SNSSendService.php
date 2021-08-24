@@ -6,7 +6,7 @@ use Jsantoso\LaravelServices\AWS\SNS\SNSBase;
 
 class SNSSendService extends SNSBase {
     
-    public function send($topicARN, $message, $subject = null) {
+    public function send($topicARN, $message, $messagStructure = 'json', array $messageAttrributes = [], $subject = null) {
         try {
             
             $this->createClient();
@@ -14,11 +14,23 @@ class SNSSendService extends SNSBase {
             if (!$this->client) {
                 throw new \Exception("Failed to initialize AWS SNS client");
             }
+            
+            if (is_array($message)) {
+                $message = json_encode($message);
+            }
                   
             $params = [
-                'Message'   => $message,
-                'TopicArn'  => $topicARN,
+                'Message'           => $message,
+                'TopicArn'          => $topicARN,
             ];
+            
+            if (!empty($messageAttrributes)) {
+                $params['MessageAttributes'] = $messageAttrributes;
+            }
+            
+            if ($messagStructure) {
+                $params['MessageStructure'] = $messagStructure;
+            }
             
             if ($subject) {
                 $params['Subject'] = $subject;
