@@ -19,7 +19,7 @@ class AWSSNSTest implements SelfTestPluginInterface {
     
     public function getTestActions(): array {
         $output = [];
-        $output[] = new SelfTestAction("Produce message to AWS SNS and consume the same message via linked SQS queue", "SNSListener", $this->generateSNSListenerTest());
+        $output[] = new SelfTestAction("Publish message to AWS SNS topic (" . self::TOPIC_NAME . ") and consume the same message via linked SQS queue (" . self::QUEUE_NAME . ")", "SNSListener", $this->generateSNSListenerTest());
 
         return $output;
     }
@@ -30,9 +30,12 @@ class AWSSNSTest implements SelfTestPluginInterface {
             
             try {
                 $data = $this->generateRandomData();
-
+                
+                $topicARN = "arn:aws:sns:" . env('AWS_REGION') . ":" . env('AWS_ACCOUNT_NUMBER') . ":" . self::TOPIC_NAME;
+                \Log::info("Publishing to SNS topic ARN {$topicARN}");
+                
                 $sender = app()->make(SNSSendService::class);
-                $sender->send(self::TOPIC_NAME, $data, null);
+                $sender->send($topicARN, $data, null);
 
                 sleep(2);
                 
