@@ -1,5 +1,7 @@
 <?php
 
+namespace Jsantoso\LaravelServices\Traits;
+
 use Illuminate\Http\Request;
 use Jsantoso\LaravelServices\ValidationService;
 use Exception;
