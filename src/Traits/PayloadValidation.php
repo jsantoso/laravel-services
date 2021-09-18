@@ -12,6 +12,7 @@ trait PayloadValidation {
     public static $VALIDATE_FOR_NON_NEGATIVE_INTEGER = 2;
     public static $VALIDATE_FOR_ISO_DATE = 3;
     public static $VALIDATE_FOR_JSON = 4;
+    public static $VALIDATE_FOR_GIVEN_OPTIONS = 5;
     
     public function generateErrorResponse($code, $message, $contentType = 'text/plain') {
         return response(json_encode($message), $code)
@@ -44,7 +45,7 @@ trait PayloadValidation {
         return $payload;
     }
     
-    public function getRequiredPayloadAttribute(array $payload, $attributeName, $validationRule = null) {
+    public function getRequiredPayloadAttribute(array $payload, $attributeName, $validationRule = null, array $valueOptions = []) {
         if (!isset($payload[$attributeName])) {
             throw new Exception("The attribute '{$attributeName}' must be set");
         }
@@ -54,27 +55,27 @@ trait PayloadValidation {
         }
         
         if ($validationRule) {
-            $this->validationAttributeValue($attributeValue, $attributeName, $validationRule);
+            $this->validationAttributeValue($attributeValue, $attributeName, $validationRule, $valueOptions);
         }
         
         return $attributeValue;
     }
     
-    public function getOptionalPayloadAttribute(array $payload, $attributeName, $validationRule = null) {
+    public function getOptionalPayloadAttribute(array $payload, $attributeName, $validationRule = null, array $valueOptions = []) {
         $attributeValue = null;
         
         if (isset($payload[$attributeName])) {
             $attributeValue = trim($payload[$attributeName]);
             
             if ($attributeValue != '' && $validationRule) {
-                $this->validationAttributeValue($attributeValue, $attributeName, $validationRule);
+                $this->validationAttributeValue($attributeValue, $attributeName, $validationRule, $valueOptions);
             }
         }
     
         return $attributeValue;
     }
     
-    public function validationAttributeValue($attributeValue, $attributeName, $validationRule) {
+    public function validationAttributeValue($attributeValue, $attributeName, $validationRule, $valueOptions) {
         switch ($validationRule) {
             case self::$VALIDATE_FOR_POSITIVE_INTEGER:
                 if (!ValidationService::isPosInt($attributeValue)) {
@@ -101,6 +102,12 @@ trait PayloadValidation {
                     if (!$decoded) {
                         throw new Exception("The attribute '{$attributeName}' must be a valid JSON format");
                     }
+                }
+                break;
+                
+            case self::$VALIDATE_FOR_GIVEN_OPTIONS:
+                if (!empty($valueOptions) && !in_array($attributeValue, $valueOptions)) {
+                    throw new \Exception("The attribute '{$attributeName}' can only have the following values: " . implode(', ', $valueOptions));
                 }
                 break;
         }
