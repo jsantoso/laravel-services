@@ -3,6 +3,7 @@
 namespace Jsantoso\LaravelServices\AWS\S3;
 
 use Aws\S3\S3Client;
+use Aws\S3\PostObjectV4;
 use Psr\Log\LoggerInterface;
 
 use Jsantoso\LaravelServices\AWS\AWSConfigService;
@@ -308,6 +309,21 @@ class S3ClientService {
         }
         
         return $output;
+    }
+    
+    public function generateS3PresignedPostURL($bucket, $formInputs, $options, $expiry) {
+        $postObject = new PostObjectV4(
+            $this->client,
+            $bucket,
+            $formInputs,
+            $options,
+            $expiry
+        );
+        
+        return [
+            'attributes' => $postObject->getFormAttributes(),
+            'inputs'     => $postObject->getFormInputs(),
+        ];
     }
     
     protected function log($message, $messageType = 'warning') {
