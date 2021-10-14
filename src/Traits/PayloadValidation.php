@@ -47,10 +47,16 @@ trait PayloadValidation {
     }
     
     public function getRequiredPayloadAttribute(array $payload, $attributeName, $validationRule = null, array $valueOptions = []) {
-        if (!isset($payload[$attributeName])) {
+        if (!array_key_exists($attributeName, $payload)) {
             throw new Exception("The attribute '{$attributeName}' must be set");
         }
-        $attributeValue = trim($payload[$attributeName]);
+        
+        $attributeValue = $payload[$attributeName];
+        
+        if (is_scalar($attributeValue)) {
+            $attributeValue = trim($attributeValue);
+        }
+        
         if ($attributeValue == '') {
             throw new Exception("The attribute '{$attributeName}' cannot be empty");
         }
@@ -65,8 +71,13 @@ trait PayloadValidation {
     public function getOptionalPayloadAttribute(array $payload, $attributeName, $validationRule = null, array $valueOptions = []) {
         $attributeValue = null;
         
-        if (isset($payload[$attributeName])) {
-            $attributeValue = trim($payload[$attributeName]);
+        if (array_key_exists($attributeName, $payload)) {
+            
+            $attributeValue = $payload[$attributeName];
+            
+            if (is_scalar($attributeValue)) {
+                $attributeValue = trim($attributeValue);
+            }
             
             if ($attributeValue != '' && $validationRule) {
                 $this->validationAttributeValue($attributeValue, $attributeName, $validationRule, $valueOptions);
