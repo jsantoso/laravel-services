@@ -13,6 +13,7 @@ trait PayloadValidation {
     public static $VALIDATE_FOR_ISO_DATE = 3;
     public static $VALIDATE_FOR_JSON = 4;
     public static $VALIDATE_FOR_GIVEN_OPTIONS = 5;
+    public static $VALIDATE_FOR_UUID = 6;
     
     public function generateErrorResponse($code, $message, $contentType = 'text/plain') {
         return response(json_encode($message), $code)
@@ -108,6 +109,12 @@ trait PayloadValidation {
             case self::$VALIDATE_FOR_GIVEN_OPTIONS:
                 if (!empty($valueOptions) && !in_array($attributeValue, $valueOptions)) {
                     throw new \Exception("The attribute '{$attributeName}' can only have the following values: " . implode(', ', $valueOptions));
+                }
+                break;
+                
+            case self::$VALIDATE_FOR_UUID:
+                if (!ValidationService::isValidUUID($attributeValue)) {
+                    throw new Exception("The attribute '{$attributeName}' must be a string with UUID format");
                 }
                 break;
         }
