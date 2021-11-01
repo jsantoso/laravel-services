@@ -326,6 +326,23 @@ class S3ClientService {
         ];
     }
     
+    public function copyObject($sourceBucket, $sourcePath, $destinationBucket, $destinationPath) {
+        
+        $this->client->copyObject([
+            'CopySource'    => $sourceBucket . '/' . $sourcePath,
+            'Bucket'        => $destinationBucket,
+            'Key'           => $destinationPath,
+        ]);
+    }
+
+    public function deleteObject($bucket, $path) {
+
+        $this->client->deleteObject([
+            'Bucket'        => $bucket,
+            'Key'           => $path,
+        ]);
+    }
+    
     protected function log($message, $messageType = 'warning') {
         if ($this->logger) {
             try {
