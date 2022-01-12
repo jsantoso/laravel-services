@@ -326,6 +326,18 @@ class S3ClientService {
         ];
     }
     
+    public function generateS3PresignedGetURL($bucket, $path, $expiry) {
+        
+        $command = $this->client->getCommand('GetObject', [
+            'Bucket' => $bucket,
+            'Key'    => $path
+        ]);
+        
+        $request = $this->client->createPresignedRequest($command, $expiry);
+        
+        return (string) $request->getUri();       
+    }
+    
     public function copyObject($sourceBucket, $sourcePath, $destinationBucket, $destinationPath) {
         
         $this->client->copyObject([
