@@ -60,8 +60,8 @@ class QueueListenerService {
                 foreach ($result as $message) {
                     Log::info("Received message - " . $message['Body']);
                     try {
-                        $function($message['Body']);
                         $this->consumerService->deleteMessage($message);
+                        $function($message['Body']);
                     } catch (\Exception $ex) {
                         Log::error("Exception when calling self-contained callback function - " . $ex->getMessage());
                     }
