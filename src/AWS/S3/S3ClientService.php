@@ -51,12 +51,16 @@ class S3ClientService {
         return $this->awsConfigService;
     }
 
+    /*
+     * Deprecated.
+     * Please use uploadFile instead as it is more memory-friendly and does not involve reading the file content into RAM first
+     */
     public function upload($bucket, $destinationPath, $content, Array $options = []) {
 
         $object = [
             'Bucket' => $bucket,
             'Key'    => $destinationPath,
-            'Body'   => $content
+            'Body'   => $content    //Warning - This may cause out-of-memory exception if you are uploading a big file.
         ];
 
         $object = array_merge($object, $options);
@@ -65,6 +69,23 @@ class S3ClientService {
             $this->client->putObject($object);
         } catch (\Exception $ex) {
             $this->log("Failed to upload file to S3. Object: " . json_encode($object) . " - " . $ex->getMessage());
+        }
+    }
+    
+    public function uploadFile($bucket, $destinationPath, $sourceFile, Array $options = []) {
+
+        $object = [
+            'Bucket'        => $bucket,
+            'Key'           => $destinationPath,
+            'SourceFile'    => $sourceFile
+        ];
+
+        $object = array_merge($object, $options);
+
+        try {
+            $this->client->putObject($object);
+        } catch (\Exception $ex) {
+            $this->log("Failed to upload source file to S3. Object: " . json_encode($object) . " - " . $ex->getMessage());
         }
     }
 
