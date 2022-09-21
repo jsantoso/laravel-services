@@ -10,7 +10,7 @@ class CloudwatchClientService {
     const CLIENT_VERSION = '2010-08-01';
     const CLIENT_PROFILE = 'default';
     
-    protected CloudWatchClient $client;
+    protected ?CloudWatchClient $client;
     protected $awsCredentialKey = '';
     protected $awsCredentialSecret = '';
     protected $namespace;
