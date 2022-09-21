@@ -9,7 +9,7 @@ use Exception;
 class CloudwatchClientService {
     const CLIENT_VERSION = '2010-08-01';
     
-    protected ?CloudWatchClient $client;
+    protected $client;
     protected $awsCredentialKey = '';
     protected $awsCredentialSecret = '';
     protected $namespace;
