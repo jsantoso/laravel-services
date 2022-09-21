@@ -8,7 +8,6 @@ use Exception;
 
 class CloudwatchClientService {
     const CLIENT_VERSION = '2010-08-01';
-    const CLIENT_PROFILE = 'default';
     
     protected ?CloudWatchClient $client;
     protected $awsCredentialKey = '';
@@ -18,6 +17,7 @@ class CloudwatchClientService {
     
     public function __construct($namespace) {
         $this->namespace = $namespace;
+        $this->client = null;
     }
     
     public function setAWSCredentialKey($key) {
@@ -55,7 +55,6 @@ class CloudwatchClientService {
     public function initClient($region) {
         if (!$this->client) {
             $this->client = new CloudWatchClient([
-                'profile'       => self::CLIENT_PROFILE,
                 'version'       => self::CLIENT_VERSION,
                 'region'        => $region,
                 'credentials'   => [
