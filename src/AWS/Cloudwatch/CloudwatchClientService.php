@@ -10,12 +10,24 @@ class CloudwatchClientService {
     const CLIENT_VERSION = '2010-08-01';
     const CLIENT_PROFILE = 'default';
     
-    private CloudWatchClient $client;
-    private $namespace;
-    private $logger;
+    protected CloudWatchClient $client;
+    protected $awsCredentialKey = '';
+    protected $awsCredentialSecret = '';
+    protected $namespace;
+    protected $logger;
     
     public function __construct($namespace) {
         $this->namespace = $namespace;
+    }
+    
+    public function setAWSCredentialKey($key) {
+        $this->awsCredentialKey = $key;
+        return $this;
+    }
+    
+    public function setAWSCredentialSecret($secret) {
+        $this->awsCredentialSecret = $secret;
+        return $this;
     }
     
     public function __destruct() {
@@ -46,6 +58,10 @@ class CloudwatchClientService {
                 'profile'       => self::CLIENT_PROFILE,
                 'version'       => self::CLIENT_VERSION,
                 'region'        => $region,
+                'credentials'   => [
+                    'key'       => $this->awsCredentialKey,
+                    'secret'    => $this->awsCredentialSecret
+                ]
             ]);
         }
     }
