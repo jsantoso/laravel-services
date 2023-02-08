@@ -34,7 +34,7 @@ trait PayloadValidation {
             $payload = json_decode($requestContent, true);
         } else {
             $postedData = $request->all();
-            if ($postedData && sizeof($postedData) > 0) {
+            if (is_array($postedData)) {
                 $payload = $postedData;
             }
         }
