@@ -185,7 +185,7 @@ class ValidationService {
                 
                 if ($logger) {
                     try {
-                        $logger->warning("Error from validator: " . json_encode($error));
+                        $logger->warning("Message did not pass validation: " . json_encode($error));
                     } catch (Exception $ex) {}
                 }
                 
