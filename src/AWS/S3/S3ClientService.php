@@ -5,6 +5,7 @@ namespace Jsantoso\LaravelServices\AWS\S3;
 use Aws\S3\S3Client;
 use Aws\S3\PostObjectV4;
 use Psr\Log\LoggerInterface;
+use Aws\S3\MultipartUploader;
 
 use Jsantoso\LaravelServices\AWS\AWSConfigService;
 
@@ -86,6 +87,25 @@ class S3ClientService {
             $this->client->putObject($object);
         } catch (\Exception $ex) {
             $this->log("Failed to upload source file to S3. Object: " . json_encode($object) . " - " . $ex->getMessage());
+        }
+    }
+    
+    
+    public function uploadFileWithMultipart($bucket, $destinationPath, $sourceFile, Array $options = []) {
+        
+        $object = [
+            'bucket'        => $bucket,
+            'key'           => $destinationPath,
+        ];
+        
+        $object = array_merge($object, $options);
+        
+        $uploader = new MultipartUploader($this->client, $sourceFile, $object);
+        
+        try {
+            $uploader->upload();
+        } catch (\Exception $ex) {
+            $this->log("Failed to upload source file to S3 using multipart uploader. Object: " . json_encode($object) . " - " . $ex->getMessage());
         }
     }
 
