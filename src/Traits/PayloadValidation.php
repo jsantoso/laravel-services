@@ -111,7 +111,7 @@ trait PayloadValidation {
             case self::$VALIDATE_FOR_JSON:
                 if (is_string($attributeValue)) {
                     $decoded = json_decode($attributeValue);
-                    if (!$decoded) {
+                    if ($decoded === null) {
                         throw new Exception("The attribute '{$attributeName}' must be a valid JSON format");
                     }
                 }
