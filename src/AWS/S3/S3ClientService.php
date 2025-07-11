@@ -231,6 +231,47 @@ class S3ClientService {
         
         return $output;        
     }
+
+    /*
+     * This is the preferred way since listObjects is about to be deprecated
+     */
+    public function listDirV2($bucket, $limit = 1000, $delimiter = '/') {
+        
+        $continuationToken = null;
+        $isTruncated = false;
+        
+        $loop = 0;
+        
+        $this->log("Running " . __METHOD__ . " for bucket {$bucket}");
+        
+        do {
+            $loop++;
+            
+            $this->log("Loop #{$loop}");
+            
+            $opt = [
+                'Bucket'    => $bucket,
+                'MaxKeys'   => $limit,
+                'Delimiter' => $delimiter
+            ];
+
+            if ($continuationToken) {
+                $opt['ContinuationToken'] = $continuationToken;
+            }
+            
+            $response = $this->client->listObjectsV2($opt);
+            
+            $isTruncated = $response['IsTruncated'] ?? false;
+            $continuationToken = $response['NextContinuationToken'] ?? null;
+            
+            $contents = $response['Contents'] ?? [];
+            
+            foreach ($contents as $elem) {
+                yield $elem;
+            }
+            
+        } while ($isTruncated);    
+    }
     
     public function getObject($args) {
         $this->client->getObject($args);
