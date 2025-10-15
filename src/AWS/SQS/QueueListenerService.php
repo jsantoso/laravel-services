@@ -9,18 +9,19 @@ use Exception;
 
 class QueueListenerService {
     
-    public function __construct(SQSReceiveService $consumerService = null) {
-        if ($consumerService) {
-            $this->consumerService = $consumerService;
-        }
-    }
-    
     private $attributeNames = ['SentTimestamp'];
     private $messageAttributeNames = ['All'];
     private $maxNumberOfMessages = 10;
     private $waitTimeSeconds = 5;
     
-    private $consumerService;
+    private ?SQSReceiveService $consumerService = null;
+    private $consumerServiceParametersInitialized = false;
+
+    public function __construct(SQSReceiveService $consumerService = null) {
+        if ($consumerService) {
+            $this->consumerService = $consumerService;
+        }
+    }
        
     public function setMaxNumberOfMessages($value) {
         $this->maxNumberOfMessages = $value;
@@ -42,16 +43,9 @@ class QueueListenerService {
         return $this;
     }
     
-    public function run($queueName, Callable $function) {       
+    public function run($queueName, Callable $function, $pollIndefinitely = true) {       
         
-        if (!$this->consumerService) {
-            throw new Exception("consumer service is not set. You can set it from constructor");
-        }
-        
-        $this->consumerService->setMaxNumberOfMessages($this->maxNumberOfMessages)
-                              ->setWaitTimeSeconds($this->waitTimeSeconds)
-                              ->setAttributeNames($this->attributeNames)
-                              ->setMessageAttributeNames($this->messageAttributeNames);
+        $this->init();
         
         do {
             
@@ -64,10 +58,31 @@ class QueueListenerService {
                         $function($message['Body']);
                     } catch (\Exception $ex) {
                         Log::error("Exception when calling self-contained callback function - " . $ex->getMessage());
+                        Log::error($ex->getTraceAsString());
                     }
                 }
             }
+
+            if (!$pollIndefinitely) {
+                return;
+            }
             
         } while(true);
+    }
+
+    private function init()
+    {
+        if (!$this->consumerService) {
+            throw new Exception("consumer service is not set. You can set it from constructor");
+        }
+        
+        if (!$this->consumerServiceParametersInitialized) {
+            $this->consumerServiceParametersInitialized = true;
+            
+            $this->consumerService->setMaxNumberOfMessages($this->maxNumberOfMessages)
+                                  ->setWaitTimeSeconds($this->waitTimeSeconds)
+                                  ->setAttributeNames($this->attributeNames)
+                                  ->setMessageAttributeNames($this->messageAttributeNames);
+        }
     }
 }
