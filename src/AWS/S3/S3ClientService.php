@@ -235,7 +235,7 @@ class S3ClientService {
     /*
      * This is the preferred way since listObjects is about to be deprecated
      */
-    public function listDirV2($bucket, $limit = 1000, $delimiter = '/') {
+    public function listDirV2($bucket, $limit = 1000, $delimiter = '/', $prefix = null) {
         
         $continuationToken = null;
         $isTruncated = false;
@@ -254,6 +254,10 @@ class S3ClientService {
                 'MaxKeys'   => $limit,
                 'Delimiter' => $delimiter
             ];
+
+            if ($prefix) {
+                $opt['Prefix'] = $prefix;
+            }
 
             if ($continuationToken) {
                 $opt['ContinuationToken'] = $continuationToken;
