@@ -273,6 +273,18 @@ class S3ClientService {
             foreach ($contents as $elem) {
                 yield $elem;
             }
+
+            $commonPrefixes = $response['CommonPrefixes'] ?? [];
+            foreach ($commonPrefixes as $commonPrefix) {
+                $nestedPrefix = $commonPrefix['Prefix'] ?? null;
+                if ($nestedPrefix) {
+                    $output = new \stdclass();
+                    $output->type = 'CommonPrefix';
+                    $output->prefix = $nestedPrefix;
+
+                    yield $output;
+                }
+            }
             
         } while ($isTruncated);    
     }
