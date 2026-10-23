@@ -302,6 +302,13 @@ class S3ClientService {
     public function doesObjectExist($bucket, $key) {
         return $this->client->doesObjectExist($bucket, $key);
     }
+
+    public function getObjectInfo($bucket, $s3Path) {
+        return $this->client->headObject([
+            'Bucket'    => $bucket, 
+            'Key'       => $s3Path,
+        ]);
+    }
     
     public function doesPathExist($bucket, $s3Path) {
         $results = $this->client->listObjects([
